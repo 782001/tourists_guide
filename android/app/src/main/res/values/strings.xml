@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tourist Guide</string>
+    <string name="facebook_app_id">304645545265088</string> 
+    <string name="fb_login_protocol_scheme">fb042ed86e523282aa83326ecea1dc79a9</string>
+    <!-- <string name="facebook_client_token">461b5a7dd492badb1c48f4d231944676</string> -->
+</resources>

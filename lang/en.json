@@ -1,0 +1,67 @@
+{
+
+
+
+  "downTitle":"What is Tourist Guide ? ",
+  "downDec":"With Tourist Guide you can explore archaeological sites in Cairo or Giza  and learn exciting background information through multimedia and audio recordings! Do not forget to switch on your GPS ;).",
+ 
+  "westTitle":"Discover ", 
+  "westDec":"Discovers trails in Cairo or Giza  using map.",
+  
+  "retTitle":"Switch on and Go ",
+  "retDec":" Did you find the right trail? Do not forget to switch on your GPS ;).",
+  
+  "coldTitle":"Stations ",
+  "coldDec":"Go from station to station and learn exciting things about the past.",
+ 
+  "practiceTitle":"Respectful Interaction  ",
+  "practiceDec":" Archeological sites are sensitive! Please do not climb on ruins during the trail, do not touch, do not sit down on anything, do not take anything with you and do not leave trash :)"
+ ,
+  "let'sStart":"Let’s Go !",
+
+  "logIn":" Sign in",
+  "logInNow":" Login ",
+  "logInDone":"LogIn Done Sucssesfully",
+  "email":" EMAIL ",
+  "please_enteremail":"Please enter your e-mail",
+  "please_enterCorrectEmail":"Please enter a valid e-mail address.",
+
+  "password":"PASSWORD ",
+  "please_enterPass":"Please enter your password",
+  "please_enterPassMore_9":"Password must be more than 9 Characters",
+  "forgot_password":"Forgot password?",
+  "name":"NAME",
+  "please_enterName":"Please Enter Name",
+  "please_enterNameMore_3":"Name must be more than 3 Characters",
+"resetPasswordEmailSent":"Reset Password Email Sent ",
+"resetPassword" :"Reset a New Pasword  ",
+"reset" :" Reset ",
+  "log":"login ",
+  "haveNoAccount":"You don't have an Account?",
+  "CreateAccount":"Create an Account",
+  "GooglelogIn":"Login with Google",
+  "FaceBooklogIn":"Login with Facebook",
+  "or":" Or",
+  "CreateAccountNow":"Create an Account ",
+  "Change_lang":"Language",
+  "HowTo_Use":"How to Use  Tourist Guide  ?"
+
+  ,
+  "contact":"Contact",
+
+  "readText":"READ THE TRANSCRIPT",
+  "return":"RETURN ",
+  "invalid-email":"Your email address appears to be incorrect." ,
+  "wrong-password":"Your password is wrong.",
+  "email-already-in-use":"Email-already-in-use",
+  "user-not-found":"User with this email doesn't exist.",
+  "user-disabled":"User with this email has been disabled.",
+  "too-many-requests":"Too many requests",
+  "operation-not-allowed":"Signing in with Email and Password is not enabled.",
+ 
+  "default_errorMessage":"An undefined Error happened.",
+  "myLocation":"myLocation",
+  "characters":"Historical Figures",
+    "tour":"Tour - Cairo and Giza"
+  
+}

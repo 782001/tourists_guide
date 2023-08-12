@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tourist_guide">
+  <queries>
+        <provider android:authorities="com.facebook.katana.provider.PlatformProvider" /> <!-- allows app to access Facebook app features -->
+        <provider android:authorities="com.facebook.orca.provider.PlatformProvider" /> <!-- allows sharing to Messenger app -->
+    </queries>
         <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -8,8 +12,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
-         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-       <!-- <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_tokens"/> -->
+           	<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>       <!-- <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_tokens"/> -->
         <meta-data android:name="com.google.android.geo.API_KEY"
                     
                     

@@ -9,6 +9,7 @@ import '../../../home/presentation/screens/home_screen.dart';
 import 'login_states.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:twitter_login/twitter_login.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
   LoginCubit() : super(LoginInitialState());
@@ -173,6 +174,40 @@ class LoginCubit extends Cubit<LoginStates> {
     });
     // Once signed in, return the UserCredential
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
+  Future<UserCredential> signInWithTwitter(context) async {
+    // Create a TwitterLogin instance
+    final twitterLogin = new TwitterLogin(
+        apiKey: 'kMnyVvb7cAKWHDcZpWmuonbAl',
+        apiSecretKey: '1H70bojwWWkb7LCJgzcgfn6oFbzbqLXNiV2LCyDXH7EHpVryAE',
+        redirectURI:
+            'https://tourist-guide-94254.firebaseapp.com/__/auth/handler');
+
+    // Trigger the sign-in flow
+    final authResult = await twitterLogin.login();
+
+    // Create a credential from the access token
+    final twitterAuthCredential = TwitterAuthProvider.credential(
+      accessToken: authResult.authToken!,
+      secret: authResult.authTokenSecret!,
+    );
+    CashHelper.SaveData(
+      key: 'uId',
+      value: authResult.authToken!,
+    ).then((value) {
+      ShowToust(
+        Text: AppLocalizations.of(context)!.translate('logInDone')!,
+        state: ToustStates.SUCSESS,
+      );
+      NavAndFinish(
+        context,
+        const HomeScreen(),
+      );
+    });
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance
+        .signInWithCredential(twitterAuthCredential);
   }
 }
 

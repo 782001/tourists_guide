@@ -117,9 +117,9 @@ class MyDrawer extends StatelessWidget {
               //     mode: LaunchMode.externalApplication)) {
               //   throw 'Could not launch $emailUri';
               // }
-              if (!await launchUrl(emailUri,
+              if (!await launchUrl(contacturl,
                   mode: LaunchMode.externalApplication)) {
-                throw 'Could not launch $emailUri';
+                throw 'Could not launch $contacturl';
               }
             },
             child: Padding(

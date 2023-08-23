@@ -32,7 +32,7 @@ class BordingStrings {
       "     المواقع الأثرية حساسة رجاءاً لا تتسلق الآثار أثناء التجول في المسار، لا تأخذ شيئاً معك ولا تترك القمامة!";
 }
 
-Uri contacturl = Uri.parse('https://wsend.co/201063465434');
+Uri contacturl = Uri.parse('https://wsend.co/201158942969');
 final Uri emailUri = Uri(
   scheme: 'mailto',
   path: 'alwdyb641@gmail.com',

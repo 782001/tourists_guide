@@ -461,12 +461,12 @@ class LoginScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(20),
                                   // highlightColor: const Color(0xffF89368),
                                   onTap: () async {
-                                    await cubit.signInWithFacebook(context);
+                                    await cubit.signInWithTwitter(context);
                                   },
                                   child: OutLineB(
                                       text: AppLocalizations.of(context)!
                                           .translate('FaceBooklogIn')!,
-                                      icon: faceImage),
+                                      icon: twitterImage),
                                 ),
                               ],
                             ),

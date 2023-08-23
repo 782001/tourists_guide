@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Tourists Guide</string>
-    <string name="facebook_app_id">3159366087702470</string> 
-    <string name="fb_login_protocol_scheme">fbfec7ac3c106ff218483955074025921e</string>
-    <!-- <string name="facebook_client_token">48960d6195231047fe220ce19a11b3bd</string> -->
+    <string name="app_name">Tourist Guide</string>
+    <string name="facebook_app_id">954988708942735</string> 
+    <string name="fb_login_protocol_scheme">fb3017d0553808827840328b10a9bf7068</string>
+    <string name="facebook_client_token">4e51d25806f8bee167bcc0da9cd4f08a</string>
 </resources>

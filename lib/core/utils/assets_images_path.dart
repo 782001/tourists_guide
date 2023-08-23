@@ -14,6 +14,7 @@ String exIcon = _getAssetsImagePath('ex.png');
 String loginImage = _getAssetsImagePath('login.png');
 String googleImage = _getAssetsImagePath('google.png');
 String faceImage = _getAssetsImagePath('facebook.png');
+String twitterImage = _getAssetsImagePath('twitter.png');
 String homeImage = _getAssetsImagePath('homeImage.jpg');
 String homeImage2 = _getAssetsImagePath('homeImage2.jpg');
 

@@ -22,6 +22,7 @@
   "logIn":" Sign in",
   "logInNow":" Login ",
   "logInDone":"LogIn Done Sucssesfully",
+  "RegiserDone":"Please Sign in here",
   "email":" EMAIL ",
   "please_enteremail":"Please enter your e-mail",
   "please_enterCorrectEmail":"Please enter a valid e-mail address.",
@@ -37,7 +38,7 @@
 "resetPassword" :"Reset a New Pasword  ",
 "reset" :" Reset ",
   "log":"login ",
-  "haveNoAccount":"You don't have an Account?",
+  "haveNoAccount":" have No Account?",
   "CreateAccount":"Create an Account",
   "GooglelogIn":"Login with Google",
   "FaceBooklogIn":"Login with Facebook",
@@ -62,6 +63,7 @@
   "default_errorMessage":"An undefined Error happened.",
   "myLocation":"myLocation",
   "characters":"Historical Figures",
-    "tour":"Tour - Cairo and Giza"
+    "tour":"Tour - Cairo and Giza",
+    "maps":"Maps"
   
 }

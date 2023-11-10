@@ -372,15 +372,22 @@ class RegisterScreen extends StatelessWidget {
                                               .validate()) {
                                             RegisterCubit.get(context)
                                                 .userRegister(
-                                                  context: context,
-                                                  email: emailController.text,
-                                                  password:
-                                                      passwordController.text,
-                                                  name: nameController.text,
-                                                  // phone: phoneController.text,
-                                                )
-                                                .then((value) => NavAndFinish(
-                                                    context, LoginScreen()));
+                                              context: context,
+                                              email: emailController.text,
+                                              password: passwordController.text,
+                                              name: nameController.text,
+                                              // phone: phoneController.text,
+                                            )
+                                                .then((value) {
+                                              NavAndFinish(
+                                                  context, LoginScreen());
+                                              ShowToust(
+                                                  Text: AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          'RegiserDone')!,
+                                                  state: ToustStates.SUCSESS);
+                                            });
                                           }
                                         },
                                         child: AutoSizeText(

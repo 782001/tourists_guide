@@ -10,7 +10,6 @@ import '../../../core/network/local/cashhelper.dart';
 import '../../../core/utils/assets_images_path.dart';
 import '../../../core/utils/components.dart';
 import '../../home/presentation/screens/home_screen.dart';
-import '../../localization/presentation/screens/splash.dart';
 import '../register/register_screen.dart';
 import '../reset_password/screen/reset_screen.dart';
 import 'login_cubit/login_cubit.dart';
@@ -390,7 +389,7 @@ class LoginScreen extends StatelessWidget {
                                           onPressed: () {
                                             NavTo(context, RegisterScreen());
                                           },
-                                          child: AutoSizeText(
+                                          child: Text(
                                             AppLocalizations.of(context)!
                                                 .translate('CreateAccount')!,
                                             style: const TextStyle(
@@ -481,6 +480,22 @@ class LoginScreen extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class SignINBackground extends StatelessWidget {
+  const SignINBackground({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Image.asset(
+      'assets/images/background.jpg',
+      fit: BoxFit.cover,
+      height: size.height,
+      width: size.width,
     );
   }
 }

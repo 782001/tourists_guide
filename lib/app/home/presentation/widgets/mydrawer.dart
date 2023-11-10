@@ -16,6 +16,7 @@ class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -23,7 +24,9 @@ class MyDrawer extends StatelessWidget {
               decoration: const BoxDecoration(
                 color: Colors.white,
               ),
-              child: Container()),
+              child: Container(
+                color: Colors.white,
+              )),
           InkWell(
             onTap: () {
               Navigator.pop(context);

@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../../../config/locale/app_localizations.dart';
 import '../../characters/presentation/screens/heros/heros_screen.dart';
-import '../../places/presentation/screens/Map.dart';
+import '../../places/presentation/screens/places_screens.dart';
 import '../controller/home_cubit.dart';
 import '../controller/home_states.dart';
 
@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (long == null) long = defaultLong;
                       NavTo(
                           context,
-                          MapScreen(
+                          PlacesScreens(
                             lat: lat,
                             long: long,
                           ));

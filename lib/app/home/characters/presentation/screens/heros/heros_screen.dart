@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:tourist_guide/core/utils/app_strings.dart';
 import 'package:tourist_guide/core/utils/assets_images_path.dart';
 import 'package:tourist_guide/core/utils/media_query_values.dart';
@@ -13,8 +18,42 @@ import '../../controller/characters_states.dart';
 import 'heros_details.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 
-class HerosScreen extends StatelessWidget {
+class HerosScreen extends StatefulWidget {
   const HerosScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HerosScreen> createState() => _HerosScreenState();
+}
+
+class _HerosScreenState extends State<HerosScreen> {
+  late StreamSubscription subscription;
+  var isDeviceConnected = false;
+  bool isAlertSet = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    getConnectivity();
+    super.initState();
+  }
+
+  getConnectivity() =>
+      subscription = Connectivity().onConnectivityChanged.listen(
+        (ConnectivityResult result) async {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          if (!isDeviceConnected && isAlertSet == false) {
+            showDialogBox();
+            setState(() {
+              isAlertSet = true;
+            });
+          }
+        },
+      );
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    subscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,14 +120,11 @@ class HerosScreen extends StatelessWidget {
                                             charactersData: cubit
                                                 .getCharactersEntities![index],
 
-                                            TouchIndex: TouchIndex,
                                             // heroIconsModel: HeroIconModel,
                                           )));
                             },
                             child: HeroGridView(
-                                cubit.getCharactersEntities![index],
-                                context,
-                                TouchIndex));
+                                cubit.getCharactersEntities![index], context));
                       },
                       itemCount: cubit.getCharactersEntities!.length,
                       // itemCount: 3,
@@ -104,6 +140,33 @@ class HerosScreen extends StatelessWidget {
           }),
     );
   }
+
+  void showDialogBox() => showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: Text('No Connection'),
+          content: Text('Please check your internet connectivitu'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context, "Cancel");
+                setState(() {
+                  isAlertSet = false;
+                });
+                isDeviceConnected =
+                    await InternetConnectionChecker().hasConnection;
+                if (!isDeviceConnected) {
+                  showDialogBox();
+                  setState(() {
+                    isAlertSet = true;
+                  });
+                }
+              },
+              child: Text('OK'),
+            )
+          ],
+        ),
+      );
 }
 
 class HeroIconsModel {
@@ -130,7 +193,6 @@ List<HeroIconsModel> HeroList = [
 HeroGridView(
   GetCharactersEntities HeroIconModel,
   BuildContext context,
-  int TouchIndex,
 ) {
   final bool isLocalImage =
       HeroIconModel.image.contains('http://localhost/storage/') ||

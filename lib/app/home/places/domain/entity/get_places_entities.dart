@@ -5,6 +5,9 @@ class GetPlacesEntities extends Equatable {
   final String titleEN;
   final String descriptionEN;
   final String titleAR;
+  final String webUrlEn;
+  final String webUrlAr;
+
   final String descriptionAR;
   final String lat;
   final String lng;
@@ -16,6 +19,8 @@ class GetPlacesEntities extends Equatable {
     required this.titleEN,
     required this.descriptionEN,
     required this.titleAR,
+    required this.webUrlEn,
+    required this.webUrlAr,
     required this.descriptionAR,
     required this.lat,
     required this.lng,
@@ -49,6 +54,8 @@ class GetPlacesEntities extends Equatable {
       lng,
       audio_Ar,
       audio_En,
+      webUrlAr,
+      webUrlEn,
       images,
     ];
   }

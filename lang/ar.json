@@ -33,7 +33,7 @@
   "logIn":" تسجيل الدخول",
   "logInNow":" سجل ",
   "logInDone":" تم تسجيل الدخول بنجاح",
-  
+  "RegiserDone":"تم عمل حساب بنجاح برجاء التسجيل الان",
   "email":"البريد الإلكتروني",
   "please_enteremail":"من فضلك أدخل البريد الإلكتروني",
   "please_enterCorrectEmail":"من فضلك أدخل بريدًا إلكترونيًا صحيحًا",
@@ -50,6 +50,7 @@
   "please_enterNameMore_3":"الاسم يجب أن يكون أكثر من 3 مدخلات  ",
 
   "log":"سجل ",
+
   "haveNoAccount":"ليس لديك حساب إلكتروني؟ ",
   "CreateAccount":"أنشئ حسابَاً ",
   "GooglelogIn":"تسجيل الدخول باستخدام جوجل ",
@@ -75,7 +76,8 @@
  
   "default_errorMessage":"حدث خطأ غير معروف",   "characters":"شخصيات تاريخية",
     "tour":"جولة - القاهره والجيزه",
-  "myLocation":"موقعي"
+  "myLocation":"موقعي",
+  "maps":"الخريطه"
 
   
 }

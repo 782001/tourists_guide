@@ -11,6 +11,8 @@ class AppStrings {
   static const String englishCode = 'en';
   static const String arabicCode = 'ar';
   static const String locale = 'locale';
+  static const String webUrlAr = 'https://782001.github.io/tourist_web_ar/#/';
+  static const String webUrlEn = 'https://782001.github.io/tourist-web/#/';
 }
 
 class BordingStrings {

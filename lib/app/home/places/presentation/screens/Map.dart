@@ -3,6 +3,9 @@
 import 'dart:async';
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:tourist_guide/app/home/places/domain/entity/get_places_entities.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +25,14 @@ import 'dart:ui' as ui;
 class MapScreen extends StatefulWidget {
   const MapScreen({
     Key? key,
+    required this.placesData,
     this.lat,
     this.long,
   }) : super(key: key);
 
   final double? lat;
   final double? long;
-
+  final GetPlacesEntities placesData;
   @override
   State<MapScreen> createState() => MapScreenState();
 }
@@ -36,6 +40,34 @@ class MapScreen extends StatefulWidget {
 class MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+  late StreamSubscription subscription;
+  var isDeviceConnected = false;
+  bool isAlertSet = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    getConnectivity();
+    super.initState();
+  }
+
+  getConnectivity() =>
+      subscription = Connectivity().onConnectivityChanged.listen(
+        (ConnectivityResult result) async {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          if (!isDeviceConnected && isAlertSet == false) {
+            showDialogBox();
+            setState(() {
+              isAlertSet = true;
+            });
+          }
+        },
+      );
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    subscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,12 +113,144 @@ class MapScreenState extends State<MapScreen> {
           //   double lng = double.parse(e.lng);
           //   return LatLng(lat, lng);
           // }).toList();
+
+          LatLng PlaceLocation;
+          double? lat = double.tryParse(widget.placesData.lat);
+          double? lng = double.tryParse(widget.placesData.lng);
+          PlaceLocation = LatLng(lat ?? 0, lng ?? 0);
+          final CameraPosition PlaceLocationMarker = CameraPosition(
+            target: PlaceLocation,
+            zoom: 15,
+          );
+//           Future<Set<Marker>> generateMarkers(LatLng positions) async {
+//             List<Marker> markers = <Marker>[];
+//             {
+//               final entity = widget.placesData;
+//               final location = positions;
+//               //here i calculate the distance between my location and my markers location
+//               double distance = Geolocator.distanceBetween(widget.lat!,
+//                   widget.long!, location.latitude, location.longitude);
+//               print(
+//                   "$distance llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
+//               // BitmapDescriptor icon = BitmapDescriptor.defaultMarkerWithHue(
+//               //     BitmapDescriptor.hueViolet);
+//               // BitmapDescriptor icon = distance <= 15
+//               //     ?  BitmapDescriptor.fromBytes(
+//               //    mahatatIconBytes,
+//               //     // size: const Size(1, 1)
+//               //   )
+//               //     :  BitmapDescriptor.fromBytes(
+//               //    mahatatIconBytes,
+//               //     // size: const Size(1, 1)
+//               //   );
+//               // mahatat.png
+
+// //#########################################
+// // here i change my location icon
+//               final ByteData blueDotIconData =
+//                   // await rootBundle.load('assets/images/location_Icon.png');
+//                   await rootBundle.load('assets/images/current.png');
+//               // final Uint8List blueDotIconBytes =
+//               //     Uint8List.view(blueDotIconData.buffer);
+//               final ui.Codec codec = await ui.instantiateImageCodec(
+//                 blueDotIconData.buffer.asUint8List(),
+//                 targetWidth: 250,
+//                 targetHeight: 250,
+//               );
+//               final ui.FrameInfo frameInfo = await codec.getNextFrame();
+//               // click on blueDotIconBytes to see where and how it work
+//               final Uint8List blueDotIconBytes = await frameInfo.image
+//                   .toByteData(format: ui.ImageByteFormat.png)
+//                   .then((data) => data!.buffer.asUint8List());
+
+//               /// ########################################
+// // here i change mahatat location icon
+//               final ByteData mahatatIconData =
+//                   // await rootBundle.load('assets/images/location_Icon.png');
+//                   await rootBundle.load('assets/images/mahatat.png');
+//               // final Uint8List blueDotIconBytes =
+//               //     Uint8List.view(blueDotIconData.buffer);
+//               final ui.Codec mahatatcodec = await ui.instantiateImageCodec(
+//                 mahatatIconData.buffer.asUint8List(),
+//                 targetWidth: 250,
+//                 targetHeight: 250,
+//               );
+//               final ui.FrameInfo mahatatframeInfo =
+//                   await mahatatcodec.getNextFrame();
+//               // click on blueDotIconBytes to see where and how it work
+//               final Uint8List mahatatIconBytes = await mahatatframeInfo.image
+//                   .toByteData(format: ui.ImageByteFormat.png)
+//                   .then((data) => data!.buffer.asUint8List());
+//               final ByteData NerestmahatatIconData =
+//                   // await rootBundle.load('assets/images/location_Icon.png');
+//                   await rootBundle.load('assets/images/nerest.png');
+//               // final Uint8List blueDotIconBytes =
+//               //     Uint8List.view(blueDotIconData.buffer);
+//               final ui.Codec Nerestmahatatcodec =
+//                   await ui.instantiateImageCodec(
+//                 NerestmahatatIconData.buffer.asUint8List(),
+//                 targetWidth: 250,
+//                 targetHeight: 250,
+//               );
+//               final ui.FrameInfo NerestmahatatframeInfo =
+//                   await Nerestmahatatcodec.getNextFrame();
+//               // click on blueDotIconBytes to see where and how it work
+//               final Uint8List NerestmahatatIconBytes =
+//                   await NerestmahatatframeInfo.image
+//                       .toByteData(format: ui.ImageByteFormat.png)
+//                       .then((data) => data!.buffer.asUint8List());
+//               BitmapDescriptor icon = distance <= 100
+//                   ? BitmapDescriptor.fromBytes(
+//                       NerestmahatatIconBytes,
+//                       // size: const Size(1, 1)
+//                     )
+//                   : BitmapDescriptor.fromBytes(
+//                       mahatatIconBytes,
+//                       // size: const Size(1, 1)
+//                     );
+
+//               /// ######################################## /// ########################################
+//               Marker marker = Marker(
+//                 infoWindow: InfoWindow(
+//                     title:
+//                         BlocProvider.of<LocaleCubit>(context).currentLangCode ==
+//                                 AppStrings.englishCode
+//                             ? entity.titleEN
+//                             : entity.titleAR),
+//                 markerId: MarkerId(location.toString()),
+//                 position: LatLng(location.latitude, location.longitude),
+//                 icon: icon,
+//                 onTap: () {},
+//                 // onTap: () => _showAlertDialog(entity),
+//               );
+//               Marker myLocationMarker = Marker(
+//                 position: LatLng(widget.lat!, widget.long!),
+//                 infoWindow: InfoWindow(
+//                     title:
+//                         AppLocalizations.of(context)!.translate('myLocation')!),
+//                 icon: BitmapDescriptor.fromBytes(
+//                   blueDotIconBytes,
+//                   // size: const Size(1, 1)
+//                 ),
+//                 markerId: const MarkerId('myLocation'),
+//                 // onTap: () => _showAlertDialog(),
+//               );
+//               markers.add(marker);
+//               markers.add(myLocationMarker);
+//             }
+
+//             return markers.toSet();
+//           }
+
+          //!
           List<LatLng> positions = cubit.getPlacesEntities?.map((e) {
                 double? lat = double.tryParse(e.lat);
                 double? lng = double.tryParse(e.lng);
                 return LatLng(lat ?? 0, lng ?? 0);
               }).toList() ??
               [];
+          //!
+          //!
           Future<Set<Marker>> generateMarkers(List<LatLng> positions) async {
             List<Marker> markers = <Marker>[];
             for (int i = 0; i < positions.length; i++) {
@@ -206,6 +370,7 @@ class MapScreenState extends State<MapScreen> {
             return markers.toSet();
           }
 
+          //!
           return ConditionalBuilder(
             condition: cubit.getPlacesEntities != null,
             builder: (context) => FutureBuilder(
@@ -215,7 +380,7 @@ class MapScreenState extends State<MapScreen> {
                 // circles: circles,
                 mapType: MapType.hybrid,
                 markers: snapshot.data!,
-                initialCameraPosition: myLocationMarker,
+                initialCameraPosition: PlaceLocationMarker,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
@@ -298,6 +463,33 @@ class MapScreenState extends State<MapScreen> {
       },
     );
   }
+
+  void showDialogBox() => showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: Text('No Connection'),
+          content: Text('Please check your internet connectivitu'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context, "Cancel");
+                setState(() {
+                  isAlertSet = false;
+                });
+                isDeviceConnected =
+                    await InternetConnectionChecker().hasConnection;
+                if (!isDeviceConnected) {
+                  showDialogBox();
+                  setState(() {
+                    isAlertSet = true;
+                  });
+                }
+              },
+              child: Text('OK'),
+            )
+          ],
+        ),
+      );
 }
 
 // --- Button Widget --- //

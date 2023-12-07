@@ -243,7 +243,7 @@ class MapScreenState extends State<MapScreen> {
 //           }
 
           //!
-          List<LatLng> positions = cubit.getPlacesEntities?.map((e) {
+          List<LatLng> positions = cubit.getPlacesEntities.map((e) {
                 double? lat = double.tryParse(e.lat);
                 double? lng = double.tryParse(e.lng);
                 return LatLng(lat ?? 0, lng ?? 0);
@@ -254,7 +254,7 @@ class MapScreenState extends State<MapScreen> {
           Future<Set<Marker>> generateMarkers(List<LatLng> positions) async {
             List<Marker> markers = <Marker>[];
             for (int i = 0; i < positions.length; i++) {
-              final entity = cubit.getPlacesEntities![i];
+              final entity = cubit.getPlacesEntities[i];
               final location = positions[i];
               //here i calculate the distance between my location and my markers location
               double distance = Geolocator.distanceBetween(widget.lat!,
@@ -469,7 +469,7 @@ class MapScreenState extends State<MapScreen> {
         context: context,
         builder: (BuildContext context) => CupertinoAlertDialog(
           title: Text('No Connection'),
-          content: Text('Please check your internet connectivitu'),
+          content: Text('Please check your internet connectivity'),
           actions: [
             TextButton(
               onPressed: () async {

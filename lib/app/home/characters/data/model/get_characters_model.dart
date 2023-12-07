@@ -84,6 +84,8 @@ class GetCharactersModel extends GetCharactersEntities {
     // required super.data,
     // required super.message,
     // required super.success,
+    required super.webUrlAr,
+    required super.webUrlEn,
     required super.id,
     required super.audio_AR,
     required super.audio_En,
@@ -110,7 +112,8 @@ class GetCharactersModel extends GetCharactersEntities {
       descriptionAr: json['description Ar'],
       image: json['image'],
       audio_AR: json['audio ar'],
-      audio_En: json['audio en'],
+      audio_En: json['audio en'], webUrlEn: json['Web Url EN'],
+      webUrlAr: json['Web Url AR'],
     );
   }
 }

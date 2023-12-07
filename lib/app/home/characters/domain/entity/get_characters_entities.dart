@@ -9,6 +9,8 @@ class GetCharactersEntities extends Equatable {
   final String audio_AR;
   final String audio_En;
   final String image;
+  final String webUrlEn;
+  final String webUrlAr;
   GetCharactersEntities({
     required this.id,
     required this.audio_AR,
@@ -18,6 +20,8 @@ class GetCharactersEntities extends Equatable {
     required this.nameAr,
     required this.descriptionAr,
     required this.image,
+    required this.webUrlEn,
+    required this.webUrlAr,
   });
   // const GetCharacters({
   //   required this.CharactersId,

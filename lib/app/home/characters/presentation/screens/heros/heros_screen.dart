@@ -4,8 +4,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:tourist_guide/app/home/characters/presentation/screens/heros/qr_places_screen.dart';
 import 'package:tourist_guide/core/utils/app_strings.dart';
 import 'package:tourist_guide/core/utils/assets_images_path.dart';
+import 'package:tourist_guide/core/utils/components.dart';
 import 'package:tourist_guide/core/utils/media_query_values.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +19,7 @@ import '../../controller/characters_cubit.dart';
 import '../../controller/characters_states.dart';
 import 'heros_details.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:flutter/widgets.dart' as flutter;
 
 class HerosScreen extends StatefulWidget {
   const HerosScreen({Key? key}) : super(key: key);
@@ -215,42 +218,75 @@ HeroGridView(
         //         topLeft: Radius.circular(10), topRight: Radius.circular(10)),
         //   ),
         //   child: Image.asset(
-        //     HeroIconModel.icon,
+        //     PlacesIconModel.icon,
         //     height: context.height * 0.2,
         //     width: context.width * .7,
         //     fit: BoxFit.fill,
         //   ),
         // ),
-        Container(
-          height: context.height * 0.3,
-          width: context.width * 8,
-          child: Card(
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            elevation: 4,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+        Stack(
+          children: [
+            Container(
+              height: context.height * 0.3,
+              width: context.width * 8,
+              child: Card(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                elevation: 4,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                ),
+                child: isLocalImage
+                    ? flutter.Image(
+                        image: AssetImage(
+                          homeImage,
+                        ),
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                    : flutter.Image(
+                        image: NetworkImage(
+                          HeroIconModel.image,
+                        ),
+                        width: double.infinity,
+                        fit: BoxFit.fitHeight,
+                      ),
+                // Image.asset(
+                //   PlacesIconModel.image,
+                //   fit: BoxFit.cover,
+                // ),
+              ),
             ),
-            child: isLocalImage
-                ? Image(
-                    image: AssetImage(
-                      homeImage,
-                    ),
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
-                : Image(
-                    image: NetworkImage(
-                      HeroIconModel.image,
-                    ),
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-            // Image.asset(
-            //   HeroIconModel.image,
-            //   fit: BoxFit.cover,
-            // ),
-          ),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(200),
+                  color: Colors.blue.shade300,
+                ),
+                child: IconButton(
+                    onPressed: () {
+                      NavTo(
+                          context,
+                          QRCodeGeneratorCaractersScreen(
+                            url: BlocProvider.of<LocaleCubit>(context)
+                                        .currentLangCode ==
+                                    AppStrings.englishCode
+                                ? HeroIconModel.webUrlEn
+                                : HeroIconModel.webUrlAr,
+                            CaractersIconModel: HeroIconModel,
+                          ));
+                    },
+                    icon: Icon(
+                      Icons.qr_code,
+                      color: Colors.white,
+                      size: 20,
+                    )),
+              ),
+            )
+          ],
         ),
         SizedBox(
           height: context.height * 0.013,
@@ -270,7 +306,7 @@ HeroGridView(
                   style: const TextStyle(
                       color: Colors.black,
                       // fontSize: context.height * 0.017,
-                      fontSize: 18,
+                      fontSize: 16,
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold),
                 ),

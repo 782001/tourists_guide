@@ -12,7 +12,7 @@ class PlacesCubit extends Cubit<PlacesStates> {
   PlacesCubit({required this.getplacesUseCase}) : super(InitialState());
   static PlacesCubit get(context) => BlocProvider.of(context);
 
-  List<GetPlacesEntities>? getPlacesEntities;
+  List<GetPlacesEntities> getPlacesEntities = [];
   Future getPlaces() async {
     emit(PlacesLoadingState());
     var response = await getplacesUseCase(
@@ -24,7 +24,7 @@ class PlacesCubit extends Cubit<PlacesStates> {
     }, (r) {
       getPlacesEntities = r;
       print(
-          "${getPlacesEntities!.first.titleEN};lerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+          "${getPlacesEntities.length};lerrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
       emit(PlacesSucsessState());
     });
   }

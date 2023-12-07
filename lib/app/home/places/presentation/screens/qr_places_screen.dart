@@ -7,11 +7,11 @@ import 'package:tourist_guide/app/home/places/domain/entity/get_places_entities.
 import '../../../../../core/utils/app_strings.dart';
 import '../../../../localization/presentation/cubit/locale_cubit.dart';
 
-class QRCodeGeneratorScreen extends StatelessWidget {
+class QRCodeGeneratorPlacesScreen extends StatelessWidget {
   final String url;
   final GetPlacesEntities placesIconModel;
 
-  QRCodeGeneratorScreen({
+  QRCodeGeneratorPlacesScreen({
     required this.url,
     required this.placesIconModel,
   });

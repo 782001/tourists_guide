@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:tourist_guide/app/home/places/domain/entity/get_places_entities.dart';
 import 'package:tourist_guide/app/home/places/presentation/screens/places_detailes.dart';
-import 'package:tourist_guide/app/home/places/presentation/screens/qr_screen.dart';
+import 'package:tourist_guide/app/home/places/presentation/screens/qr_places_screen.dart';
 import 'package:tourist_guide/core/utils/app_strings.dart';
 import 'package:tourist_guide/core/utils/assets_images_path.dart';
 import 'package:tourist_guide/core/utils/media_query_values.dart';
@@ -74,38 +74,6 @@ class _PlacesScreensState extends State<PlacesScreens> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.grey.shade100,
-        // leading: IconButton(
-        //   icon: Icon(
-        //     Icons.arrow_back_ios_new,
-        //     color: Colors.blue.shade900,
-        //   ),
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //   },
-        // ),
-        // actions: [
-        //   IconButton(
-        //       onPressed: () {
-        //         NavTo(
-        //             context,
-        //             QRCodeGeneratorScreen(
-        //               url: BlocProvider.of<LocaleCubit>(context)
-        //                           .currentLangCode ==
-        //                       AppStrings.englishCode
-        //                   ? AppStrings.webUrlEn
-        //                   : AppStrings.webUrlAr,
-        //               // placesIconModel: PlacesIconModel,
-        //             ));
-        //       },
-        //       icon: Icon(
-        //         Icons.qr_code_rounded,
-        //         color: Colors.blue,
-        //         size: 25,
-        //       )),
-        //   SizedBox(
-        //     width: 20,
-        //   ),
-        // ],
         title: AutoSizeText(
           AppLocalizations.of(context)!.translate('tour')!,
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -145,27 +113,30 @@ class _PlacesScreensState extends State<PlacesScreens> {
                         mainAxisExtent: context.height * 0.4,
                       ),
                       itemBuilder: (BuildContext context, int index) {
-                        int TouchIndex = PlacesList[index].id;
-                        return InkWell(
+                        if (index < cubit.getPlacesEntities.length) {
+                          return InkWell(
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => PlacesDetailes(
-                                            placesData:
-                                                cubit.getPlacesEntities![index],
-
-                                            lat: widget.lat,
-                                            long: widget.long,
-                                            // PlacesIconsModel: PlacesIconModel,
-                                          )));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PlacesDetailes(
+                                    placesData: cubit.getPlacesEntities[index],
+                                    lat: widget.lat,
+                                    long: widget.long,
+                                  ),
+                                ),
+                              );
                             },
                             child: PlacesGridView(
-                              cubit.getPlacesEntities![index],
+                              cubit.getPlacesEntities[index],
                               context,
-                            ));
+                            ),
+                          );
+                        } else {
+                          return Container(); // Return an empty container for indexes out of range.
+                        }
                       },
-                      itemCount: cubit.getPlacesEntities!.length,
+                      itemCount: cubit.getPlacesEntities.length,
                       // itemCount: 10,
                       // children: List.generate(PlacesList.length,
                       //     (index) => PlacesGridView(PlacesList[index], context)),
@@ -220,20 +191,6 @@ class PlacesIconsModel {
   });
 }
 
-List<PlacesIconsModel> PlacesList = [
-  PlacesIconsModel(icon: homeImage, title: "Athena", id: 1),
-  PlacesIconsModel(icon: homeImage, title: 'Asclepius', id: 2),
-  PlacesIconsModel(icon: homeImage, title: 'Aphrodite', id: 3),
-  PlacesIconsModel(icon: homeImage, title: 'Zeus ', id: 4),
-  PlacesIconsModel(icon: homeImage, title: 'Athena', id: 5),
-  PlacesIconsModel(icon: homeImage, title: 'Asclepius', id: 6),
-  PlacesIconsModel(icon: homeImage, title: 'Athena', id: 8),
-  PlacesIconsModel(icon: homeImage, title: 'Athena', id: 9),
-  PlacesIconsModel(icon: homeImage, title: 'Athena', id: 10),
-  PlacesIconsModel(icon: homeImage, title: 'Athena', id: 11),
-  PlacesIconsModel(icon: homeImage, title: 'Athena', id: 12),
-  PlacesIconsModel(icon: homeImage, title: 'Athena', id: 13),
-];
 PlacesGridView(
   GetPlacesEntities PlacesIconModel,
   BuildContext context,
@@ -311,7 +268,7 @@ PlacesGridView(
                     onPressed: () {
                       NavTo(
                           context,
-                          QRCodeGeneratorScreen(
+                          QRCodeGeneratorPlacesScreen(
                             url: BlocProvider.of<LocaleCubit>(context)
                                         .currentLangCode ==
                                     AppStrings.englishCode
@@ -347,7 +304,7 @@ PlacesGridView(
                   style: const TextStyle(
                       color: Colors.black,
                       // fontSize: context.height * 0.017,
-                      fontSize: 18,
+                      fontSize: 16,
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold),
                 ),

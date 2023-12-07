@@ -122,7 +122,7 @@ class _HerosDetailsState extends State<HerosDetails> {
                       topRight: Radius.circular(10)),
                 ),
                 child: Card(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  clipBehavior: Clip.antiAlias,
                   elevation: 4,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -138,6 +138,7 @@ class _HerosDetailsState extends State<HerosDetails> {
                           fit: BoxFit.fitHeight,
                         )
                       : Image(
+                          // height: 30,
                           image: NetworkImage(
                             widget.charactersData.image,
                           ),

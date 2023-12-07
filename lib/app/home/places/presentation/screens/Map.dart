@@ -349,7 +349,8 @@ class MapScreenState extends State<MapScreen> {
                 markerId: MarkerId(location.toString()),
                 position: LatLng(location.latitude, location.longitude),
                 icon: icon,
-                onTap: () => _showAlertDialog(entity),
+                onTap: () {},
+                // onTap: () => _showAlertDialog(entity),
               );
               Marker myLocationMarker = Marker(
                 position: LatLng(widget.lat!, widget.long!),

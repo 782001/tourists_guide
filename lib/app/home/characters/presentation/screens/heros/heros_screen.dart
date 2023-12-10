@@ -4,7 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:tourist_guide/app/home/characters/presentation/screens/heros/qr_places_screen.dart';
+import 'package:tourist_guide/app/home/characters/presentation/screens/heros/qr_Caracters_screen.dart';
 import 'package:tourist_guide/core/utils/app_strings.dart';
 import 'package:tourist_guide/core/utils/assets_images_path.dart';
 import 'package:tourist_guide/core/utils/components.dart';

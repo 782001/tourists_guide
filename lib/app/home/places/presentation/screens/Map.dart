@@ -1,19 +1,24 @@
 // ignore_for_file: dead_code
 
 import 'dart:async';
-
+import 'dart:math';
+import 'dart:ui';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:tourist_guide/app/home/places/domain/entity/get_places_entities.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as flutter;
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tourist_guide/core/utils/components.dart';
+import 'package:tourist_guide/core/utils/media_query_values.dart';
 import '../../../../../config/locale/app_localizations.dart';
 import '../../../../../core/utils/app_strings.dart';
 import '../../../../localization/presentation/cubit/locale_cubit.dart';
@@ -40,6 +45,8 @@ class MapScreen extends StatefulWidget {
 class MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+  late BitmapDescriptor customIcon;
+  GoogleMapController? _mapController;
   late StreamSubscription subscription;
   var isDeviceConnected = false;
   bool isAlertSet = false;
@@ -48,6 +55,26 @@ class MapScreenState extends State<MapScreen> {
     // TODO: implement initState
     getConnectivity();
     super.initState();
+    _loadCustomIcon();
+  }
+
+  Future<void> _loadCustomIcon() async {
+    final PictureRecorder recorder = PictureRecorder();
+    final Canvas canvas = Canvas(recorder);
+    final myLocIcon =
+        MyLocIconWidget(0); // Your custom animated location icon widget
+    myLocIcon.paint(canvas, Size(100.0, 100.0)); // Adjust the size as needed
+
+    final img = await recorder
+        .endRecording()
+        .toImage(100, 100); // Adjust the size as needed
+    final ByteData? byteData =
+        await img.toByteData(format: ui.ImageByteFormat.png);
+    final Uint8List uint8List = byteData!.buffer.asUint8List();
+
+    setState(() {
+      customIcon = BitmapDescriptor.fromBytes(uint8List);
+    });
   }
 
   getConnectivity() =>
@@ -251,8 +278,13 @@ class MapScreenState extends State<MapScreen> {
               [];
           //!
           //!
+          LatLng? nearestPlace;
+          double minDistance = 2;
           Future<Set<Marker>> generateMarkers(List<LatLng> positions) async {
             List<Marker> markers = <Marker>[];
+
+            // nearestPlace = findNearestPlace(positions);
+
             for (int i = 0; i < positions.length; i++) {
               final entity = cubit.getPlacesEntities[i];
               final location = positions[i];
@@ -357,10 +389,13 @@ class MapScreenState extends State<MapScreen> {
                 infoWindow: InfoWindow(
                     title:
                         AppLocalizations.of(context)!.translate('myLocation')!),
-                icon: BitmapDescriptor.fromBytes(
-                  blueDotIconBytes,
-                  // size: const Size(1, 1)
-                ),
+                icon:
+                    //  BitmapDescriptor.fromBytes(
+                    customIcon,
+                // icon: BitmapDescriptor.fromBytes(
+                //   blueDotIconBytes,
+                //   // size: const Size(1, 1)
+                // ),
                 markerId: const MarkerId('myLocation'),
                 // onTap: () => _showAlertDialog(),
               );
@@ -371,20 +406,202 @@ class MapScreenState extends State<MapScreen> {
             return markers.toSet();
           }
 
-          //!
+          Marker _tappedLocationMarker = Marker(
+            markerId: MarkerId('tappedLocation'),
+            position: LatLng(0, 0),
+            icon:
+                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          );
+          List<LatLng> findNearestPlaces(
+              List<LatLng> positions, LatLng tappedItemLocation) {
+            // LatLng myLocation = LatLng(widget.lat!, widget.long!);
+            List<LatLng> nearestPlaces = [];
+            double maxDistance = 3000; // 2 kilometers
+
+            for (LatLng place in positions) {
+              double distance = Geolocator.distanceBetween(
+                tappedItemLocation.latitude,
+                tappedItemLocation.longitude,
+                place.latitude,
+                place.longitude,
+              );
+
+              if (distance <= maxDistance && distance > 0.0) {
+                nearestPlaces.add(place);
+              }
+            }
+
+            return nearestPlaces;
+          }
+
+          void _moveCamera(LatLng position) async {
+            if (_mapController != null) {
+              _mapController!.animateCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: position,
+                    zoom: 16.0, // Adjust the zoom level as needed
+                  ),
+                ),
+              );
+            }
+          }
+
+          Widget _buildSuggestions(
+              LatLng tappedItemLocation, Function(LatLng) onLocationUpdate) {
+            List<LatLng> nearestPlaces =
+                findNearestPlaces(positions, tappedItemLocation);
+            print("Tapped Item Location: $tappedItemLocation");
+            print("All Positions: $positions");
+            print("Nearest Places: $nearestPlaces");
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                children: nearestPlaces.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  LatLng position = entry.value;
+                  // print(position);
+                  double distance = Geolocator.distanceBetween(
+                    tappedItemLocation.latitude,
+                    tappedItemLocation.longitude,
+                    position.latitude,
+                    position.longitude,
+                  );
+                  print("distance:$distance");
+                  int originalIndex = positions.indexOf(position);
+                  GetPlacesEntities entity =
+                      cubit.getPlacesEntities[originalIndex];
+
+                  return GestureDetector(
+                    onTap: () {
+                      // Call the callback to update the tapped location
+                      // onLocationUpdate(position);
+                      setState(() {
+                        _tappedLocationMarker = _tappedLocationMarker.copyWith(
+                          positionParam:
+                              LatLng(position.latitude, position.longitude),
+                        );
+                      });
+                      // Update the camera position
+                      _moveCamera(position);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Container(
+                        height: context.height * 0.12,
+                        width: context.width * 0.6,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Stack(
+                          children: [
+                            Card(
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              elevation: 4,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(16),
+                                ),
+                              ),
+                              child: Container(
+                                height: context.height * 0.15,
+                                width: context.width * 0.6,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: flutter.Image(
+                                  image: NetworkImage(
+                                    entity.images.first.url,
+                                  ),
+                                  width: double.infinity,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 4.0),
+                                Center(
+                                  child: AutoSizeText(
+                                    BlocProvider.of<LocaleCubit>(context)
+                                                .currentLangCode ==
+                                            AppStrings.englishCode
+                                        ? entity.titleEN
+                                        : entity.titleAR,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                            color: Colors.black, blurRadius: 10)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Spacer(),
+                                Center(
+                                    child: AutoSizeText(
+                                  '${AppLocalizations.of(context)!.translate('Distance')!} ${distance.toDouble().toStringAsFixed(2)} ${AppLocalizations.of(context)!.translate('meter')!} ',
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                            color: Colors.black, blurRadius: 10)
+                                      ]),
+                                )),
+                                // Add any other information you want to display
+                                SizedBox(height: 8.0),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+          }
+
+//!
           return ConditionalBuilder(
             condition: cubit.getPlacesEntities != null,
             builder: (context) => FutureBuilder(
               future: generateMarkers(positions),
               initialData: const <Marker>{},
-              builder: (context, snapshot) => GoogleMap(
-                // circles: circles,
-                mapType: MapType.hybrid,
-                markers: snapshot.data!,
-                initialCameraPosition: PlaceLocationMarker,
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
+              builder: (context, snapshot) => Stack(
+                children: [
+                  GoogleMap(
+                    // circles: circles,
+                    mapType: MapType.hybrid,
+                    markers: snapshot.data!,
+                    initialCameraPosition: PlaceLocationMarker,
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                      _mapController = controller; // Assign the controller
+                    },
+                  ),
+                  Positioned(
+                    bottom: 16.0,
+                    left: 16.0,
+                    right: 16.0,
+                    child: _buildSuggestions(
+                      PlaceLocation,
+                      (newLocation) {
+                        print("last:$PlaceLocation");
+                        setState(() {
+                          PlaceLocation = newLocation;
+                          print("new:$PlaceLocation");
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             fallback: (context) =>
@@ -445,21 +662,6 @@ class MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
-
-          // actions: <Widget>[
-          //   TextButton(
-          //     child: const Text('No'),
-          //     onPressed: () {
-          //       Navigator.of(context).pop();
-          //     },
-          //   ),
-          //   TextButton(
-          //     child: const Text('Yes'),
-          //     onPressed: () {
-          //       Navigator.of(context).pop();
-          //     },
-          //   ),
-          // ],
         );
       },
     );
@@ -494,3 +696,57 @@ class MapScreenState extends State<MapScreen> {
 }
 
 // --- Button Widget --- //
+class MyLocIconWidget extends CustomPainter {
+  final double animationValue;
+
+  MyLocIconWidget(this.animationValue);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int value = 3; value >= 0; value--) {
+      circle(canvas, Rect.fromLTRB(0, 0, size.width, size.height),
+          value + animationValue);
+    }
+  }
+
+  void circle(Canvas canvas, Rect rect, double value) {
+    Paint paint = Paint()
+      ..color = Color.fromARGB(255, 25, 100, 220)
+          .withOpacity((1 - (value / 4)).clamp(.0, 1));
+
+    canvas.drawCircle(rect.center,
+        sqrt((rect.width * .5 * rect.width * .5) * value / 4), paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class MyCustomPainter extends CustomPainter {
+  final double animationValue;
+
+  MyCustomPainter(this.animationValue);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int value = 3; value >= 0; value--) {
+      circle(canvas, Rect.fromLTRB(0, 0, size.width, size.height),
+          value + animationValue);
+    }
+  }
+
+  void circle(Canvas canvas, Rect rect, double value) {
+    Paint paint = Paint()
+      ..color = Color(0xff19DC7C).withOpacity((1 - (value / 4)).clamp(.0, 1));
+
+    canvas.drawCircle(rect.center,
+        sqrt((rect.width * .5 * rect.width * .5) * value / 4), paint);
+  }
+
+  @override
+  bool shouldRepaint(MyCustomPainter oldDelegate) {
+    return true;
+  }
+}

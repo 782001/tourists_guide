@@ -85,7 +85,7 @@ class _PlacesScreensState extends State<PlacesScreens> {
           builder: (context, state) {
             var cubit = PlacesCubit.get(context);
             return ConditionalBuilder(
-              condition: PlacesCubit.get(context).getPlacesEntities != null,
+              condition: PlacesCubit.get(context).getPlacesEntities.isNotEmpty,
               builder: (context) => Center(
                 child: Container(
                   decoration: const BoxDecoration(

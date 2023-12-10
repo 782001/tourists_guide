@@ -63,7 +63,9 @@
   "default_errorMessage":"An undefined Error happened.",
   "myLocation":"myLocation",
   "characters":"Historical Figures",
-    "tour":"Tour - Cairo and Giza",
-    "maps":"Maps"
+  "tour":"Tour - Cairo and Giza",
+  "Distance":"Distance :",
+  "meter":"m",
+  "maps":"Maps"
   
 }
